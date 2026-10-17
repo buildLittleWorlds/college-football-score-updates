@@ -3,135 +3,258 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A simple college football scoreboard. Static starter with sample matchups and room for live scores in the future.">
   <title>College Football Score Updates</title>
   <style>
-    /* All styling is included here: no extra files or downloads needed. */
-    :root { --ink: #182b24; --muted: #63716a; --green: #176341; --line: #dde3da; --paper: #f5f6f0; }
     * { box-sizing: border-box; }
-    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Arial, Helvetica, sans-serif; line-height: 1.5; }
-    .wrap { width: min(1120px, 90%); margin-inline: auto; }
-    header { background: white; border-bottom: 1px solid var(--line); }
-    .header-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-block: 22px; }
-    .brand { font-size: 15px; font-weight: 800; letter-spacing: .04em; }
-    .brand-icon { display: inline-grid; place-items: center; width: 32px; height: 32px; margin-right: 8px; border-radius: 50%; background: var(--green); color: white; }
-    .edition { color: var(--muted); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
-    .hero { position: relative; overflow: hidden; background: #143d2d; color: white; padding: 64px 0 60px; }
-    .hero::after { content: ""; position: absolute; inset: 0 0 0 62%; opacity: .12; background: repeating-linear-gradient(90deg, transparent 0 78px, white 78px 80px); transform: skewX(-12deg); pointer-events: none; }
-    .eyebrow { margin: 0 0 16px; font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
-    .hero .eyebrow { color: #c7e897; }
-    h1 { position: relative; z-index: 1; max-width: 750px; margin: 0; font-size: clamp(38px, 6vw, 66px); line-height: 1.06; letter-spacing: -.045em; }
-    .hero p:last-child { position: relative; z-index: 1; max-width: 560px; margin: 23px 0 0; color: #d7e4da; font-size: 16px; }
-    main { padding-block: 32px 56px; }
-    .notice { display: flex; gap: 12px; padding: 16px 20px; background: #ebefdf; border: 1px solid #dbe3c9; border-radius: 8px; color: #415432; font-size: 14px; }
-    .notice p { margin: 0; }
-    .section-heading { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 12px; margin: 36px 0 18px; }
-    h2 { margin: 0; font-size: 26px; letter-spacing: -.03em; }
-    .section-heading p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
-    .sample-label { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; }
-    .scoreboard { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-    .game { padding: 22px; background: white; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 3px 6px #182b2403; }
-    .game-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 24px; }
-    .status { padding: 4px 8px; border-radius: 4px; background: #eef2ec; color: #4a604c; font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
-    .conference { color: var(--muted); font-size: 12px; }
-    .team { display: flex; align-items: center; gap: 12px; padding-block: 10px; }
-    .team-mark { display: grid; place-items: center; flex: 0 0 40px; height: 40px; border-radius: 8px; background: var(--team-color, #53695b); color: white; font-weight: 800; font-size: 12px; }
-    .team-name { flex: 1; font-weight: 700; font-size: 15px; }
-    .score { font-size: 28px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1; }
-    .empty { color: #9da69e; }
-    .game-bottom { margin: 20px 0 0; padding-top: 14px; border-top: 1px solid #edf0e9; color: var(--muted); font-size: 12px; }
-    .coming-next { display: flex; align-items: start; gap: 22px; margin-top: 28px; padding: 25px; border: 1px dashed #bdc9b9; border-radius: 10px; }
-    .coming-next h2 { font-size: 18px; }
-    .coming-next p { margin: 5px 0 0; font-size: 14px; color: var(--muted); }
-    .step { flex-shrink: 0; font-size: 12px; font-weight: bold; color: var(--green); padding-top: 4px; }
-    footer { border-top: 1px solid var(--line); padding-block: 24px; color: var(--muted); font-size: 12px; }
-    .footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    @media (max-width: 900px) { .scoreboard { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-    @media (max-width: 580px) { .scoreboard { grid-template-columns: 1fr; } .edition { display: none; } .hero { padding-block: 44px; } .game { padding: 20px; } .coming-next { gap: 14px; padding: 20px; } }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f5f6f0;
+      color: #182b24;
+      line-height: 1.5;
+    }
+
+    header {
+      background: #143d2d;
+      color: white;
+      padding: 48px 24px;
+    }
+
+    .wrap { max-width: 1100px; margin: auto; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 1.15;
+    }
+
+    header p { color: #d7e4da; }
+    main { padding: 30px 24px 50px; }
+
+    .notice {
+      padding: 16px 20px;
+      background: #ebefdf;
+      border: 1px solid #dbe3c9;
+      border-radius: 8px;
+    }
+
+    h2 { margin: 30px 0 6px; }
+    .instructions { margin: 0 0 20px; color: #526359; }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .game {
+      background: white;
+      border: 1px solid #dde3da;
+      border-radius: 10px;
+    }
+
+    summary {
+      padding: 22px;
+      cursor: pointer;
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    summary:hover {
+      color: #176341;
+      background: #f0f5ed;
+      border-radius: 10px;
+    }
+
+    summary:focus-visible {
+      outline: 3px solid #176341;
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    details[open] summary {
+      border-bottom: 1px solid #dde3da;
+    }
+
+    .result { padding: 20px 22px; }
+
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      background: #eef2ec;
+      color: #415432;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .team {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .score {
+      font-size: 28px;
+      font-weight: bold;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .note {
+      margin: 18px 0 0;
+      font-size: 12px;
+      color: #526359;
+    }
+
+    footer {
+      padding: 24px;
+      border-top: 1px solid #dde3da;
+      color: #526359;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .scoreboard {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 580px) {
+      .scoreboard { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="wrap header-inner">
-      <div class="brand"><span class="brand-icon" aria-hidden="true">CF</span> COLLEGE FOOTBALL</div>
-      <span class="edition">Scoreboard / Static edition</span>
+    <div class="wrap">
+      <h1>College Football Score Updates</h1>
+      <p>Your game day scoreboard. Choose a matchup to see the score.</p>
     </div>
   </header>
 
-  <section class="hero" aria-labelledby="page-title">
-    <div class="wrap">
-      <p class="eyebrow">The game day board</p>
-      <h1 id="page-title">College Football<br>Score Updates.</h1>
-      <p>Your home for college football scores. A simple scoreboard today, with real-time game updates on the horizon.</p>
-    </div>
-  </section>
-
   <main class="wrap">
-    <aside class="notice" aria-label="Data notice">
-      <span aria-hidden="true">ⓘ</span>
-      <p><strong>Starter preview.</strong> All matchups and scores below are examples, not current game results. This page is updated manually and does not refresh automatically.</p>
-    </aside>
+    <p class="notice">
+      <strong>Demo:</strong> All matchups and scores are made-up examples.
+      Live updates are planned for a future version.
+    </p>
 
-    <section aria-labelledby="scoreboard-title">
-      <div class="section-heading">
-        <div><h2 id="scoreboard-title">Around the scoreboard</h2><p>A place for every matchup, from kickoff to the final whistle.</p></div>
-        <span class="sample-label">6 sample matchups</span>
-      </div>
+    <h2>Game matchups</h2>
+    <p class="instructions">
+      Click a heading to reveal the scores. Click again to hide them.
+    </p>
 
-      <!-- Update team names, scores, and status here as you add real results.
-           Copy an entire article to add another game. -->
-      <div class="scoreboard">
-        <article class="game" aria-label="Example: Alabama 28, Georgia 24">
-          <div class="game-top"><span class="status">Example · Final</span><span class="conference">SEC</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#9e263b" aria-hidden="true">ALA</span><span class="team-name">Alabama</span><span class="score">28</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#ba3039" aria-hidden="true">UGA</span><span class="team-name">Georgia</span><span class="score">24</span></div>
-          <p class="game-bottom">Sample result · Not a real game update</p>
-        </article>
+    <!--
+      Native HTML details/summary elements handle the clicking.
+      Leaving out the "open" attribute keeps scores hidden at first.
+      Copy a details block to add another game.
+    -->
+    <div class="scoreboard">
+      <details class="game">
+        <summary>Northwestern versus Wisconsin</summary>
+        <div class="result">
+          <span class="status">Example · Final</span>
+          <div class="team">
+            <span>Northwestern</span>
+            <span class="score">21</span>
+          </div>
+          <div class="team">
+            <span>Wisconsin</span>
+            <span class="score">28</span>
+          </div>
+          <p class="note">Hard-coded sample scores</p>
+        </div>
+      </details>
 
-        <article class="game" aria-label="Example: Ohio State 21, Michigan 17">
-          <div class="game-top"><span class="status">Example · 3rd quarter</span><span class="conference">Big Ten</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#aa303b" aria-hidden="true">OSU</span><span class="team-name">Ohio State</span><span class="score">21</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#25466d" aria-hidden="true">MICH</span><span class="team-name">Michigan</span><span class="score">17</span></div>
-          <p class="game-bottom">Sample game in progress · Not live</p>
-        </article>
+      <details class="game">
+        <summary>Georgia versus UCLA</summary>
+        <div class="result">
+          <span class="status">Example · Final</span>
+          <div class="team">
+            <span>Georgia</span>
+            <span class="score">35</span>
+          </div>
+          <div class="team">
+            <span>UCLA</span>
+            <span class="score">17</span>
+          </div>
+          <p class="note">Hard-coded sample scores</p>
+        </div>
+      </details>
 
-        <article class="game" aria-label="Example: Oregon 35, Penn State 31">
-          <div class="game-top"><span class="status">Example · Final</span><span class="conference">Big Ten</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#246346" aria-hidden="true">ORE</span><span class="team-name">Oregon</span><span class="score">35</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#2b4260" aria-hidden="true">PSU</span><span class="team-name">Penn State</span><span class="score">31</span></div>
-          <p class="game-bottom">Sample result · Not a real game update</p>
-        </article>
+      <details class="game">
+        <summary>Ohio State versus Michigan</summary>
+        <div class="result">
+          <span class="status">Example · Final</span>
+          <div class="team">
+            <span>Ohio State</span>
+            <span class="score">24</span>
+          </div>
+          <div class="team">
+            <span>Michigan</span>
+            <span class="score">21</span>
+          </div>
+          <p class="note">Hard-coded sample scores</p>
+        </div>
+      </details>
 
-        <!-- An em dash means a score has not been entered yet. -->
-        <article class="game" aria-label="Sample matchup: Texas versus LSU, scores not entered">
-          <div class="game-top"><span class="status">Awaiting scores</span><span class="conference">SEC</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#b65a28" aria-hidden="true">TEX</span><span class="team-name">Texas</span><span class="score empty" aria-label="No score">—</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#65428b" aria-hidden="true">LSU</span><span class="team-name">LSU</span><span class="score empty" aria-label="No score">—</span></div>
-          <p class="game-bottom">Sample matchup · Schedule to be added</p>
-        </article>
+      <details class="game">
+        <summary>Texas versus LSU</summary>
+        <div class="result">
+          <span class="status">Example · Final</span>
+          <div class="team">
+            <span>Texas</span>
+            <span class="score">31</span>
+          </div>
+          <div class="team">
+            <span>LSU</span>
+            <span class="score">27</span>
+          </div>
+          <p class="note">Hard-coded sample scores</p>
+        </div>
+      </details>
 
-        <article class="game" aria-label="Sample matchup: Clemson versus Miami, scores not entered">
-          <div class="game-top"><span class="status">Awaiting scores</span><span class="conference">ACC</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#b75d2c" aria-hidden="true">CLEM</span><span class="team-name">Clemson</span><span class="score empty" aria-label="No score">—</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#247056" aria-hidden="true">MIA</span><span class="team-name">Miami</span><span class="score empty" aria-label="No score">—</span></div>
-          <p class="game-bottom">Sample matchup · Schedule to be added</p>
-        </article>
+      <details class="game">
+        <summary>Clemson versus Miami</summary>
+        <div class="result">
+          <span class="status">Example · Final</span>
+          <div class="team">
+            <span>Clemson</span>
+            <span class="score">20</span>
+          </div>
+          <div class="team">
+            <span>Miami</span>
+            <span class="score">24</span>
+          </div>
+          <p class="note">Hard-coded sample scores</p>
+        </div>
+      </details>
 
-        <article class="game" aria-label="Sample matchup: Utah versus Kansas State, scores not entered">
-          <div class="game-top"><span class="status">Awaiting scores</span><span class="conference">Big 12</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#a52c3d" aria-hidden="true">UTAH</span><span class="team-name">Utah</span><span class="score empty" aria-label="No score">—</span></div>
-          <div class="team"><span class="team-mark" style="--team-color:#684889" aria-hidden="true">KSU</span><span class="team-name">Kansas State</span><span class="score empty" aria-label="No score">—</span></div>
-          <p class="game-bottom">Sample matchup · Schedule to be added</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="coming-next" aria-labelledby="next-title">
-      <span class="step">UP NEXT ↗</span>
-      <div><h2 id="next-title">Follow the action as it happens.</h2><p>Automatic score refreshes and live game status are planned for a future version. For now, this board is a static starting point.</p></div>
-    </section>
+      <details class="game">
+        <summary>Oregon versus Penn State</summary>
+        <div class="result">
+          <span class="status">Example · Final</span>
+          <div class="team">
+            <span>Oregon</span>
+            <span class="score">35</span>
+          </div>
+          <div class="team">
+            <span>Penn State</span>
+            <span class="score">31</span>
+          </div>
+          <p class="note">Hard-coded sample scores</p>
+        </div>
+      </details>
+    </div>
   </main>
 
-  <footer><div class="wrap footer-inner"><span>College Football Score Updates</span><span>Independent fan project · Sample data only</span></div></footer>
+  <footer>
+    <div class="wrap">
+      College Football Score Updates · Independent fan project · Sample data only
+    </div>
+  </footer>
 </body>
 </html>
